@@ -1,0 +1,389 @@
+﻿TEMA
+    about_Execution_Policies
+
+DESCRIPCIÓN BREVE
+    Describe las directivas de ejecución de Windows PowerShell y 
+    explica cómo se administran.
+
+DESCRIPCIÓN DETALLADA
+    Las directivas de ejecución de Windows PowerShell permiten 
+    determinar las condiciones en que Windows PowerShell carga los 
+    archivos de configuración y ejecuta los scripts.
+
+    Se puede establecer una directiva de ejecución para el equipo 
+    local, para el usuario actual o para una sesión determinada. 
+    También se puede utilizar una configuración de Directiva de grupo para 
+    establecer la directiva de ejecución de los equipos y usuarios.
+
+    Las directivas de ejecución del equipo local y del usuario actual se 
+    almacenan en el Registro. No es necesario establecer las directivas 
+    de ejecución en el perfil de Windows PowerShell. La directiva de 
+    ejecución de una sesión determinada se almacena solamente en la 
+    memoria y se pierde cuando se cierra la sesión.
+
+    La directiva de ejecución no es un sistema de seguridad que 
+    restringe las acciones del usuario.
+    Por ejemplo, los usuarios pueden sortear con facilidad una directiva 
+    escribiendo el contenido del script en la línea de comandos cuando no 
+    pueden ejecutar un script. En lugar de ello, la directiva de 
+    ejecución ayuda a los usuarios a establecer reglas básicas y evita que 
+    se infrinjan involuntariamente.
+
+
+ DIRECTIVAS DE EJECUCIÓN DE WINDOWS POWERSHELL
+ -------------------------------------
+
+    Las directivas de ejecución de Windows PowerShell son:
+
+    "Restricted" es la directiva predeterminada.
+
+        Restricted
+            - Directiva de ejecución predeterminada.
+
+            - Admite comandos individuales, pero no permite ejecutar 
+              scripts. 
+
+            - Evita que se ejecuten todos los archivos de script, 
+              incluidos los archivos de formato y configuración 
+              (.ps1xml), los archivos de script de módulos (.psm1) y los 
+              perfiles de Windows PowerShell (.ps1). 
+    
+        AllSigned
+            - Permite ejecutar scripts.
+
+            - Requiere que todas los scripts y archivos de 
+              configuración estén firmados por un editor de 
+              confianza, incluidos los scripts que se escriben en un 
+              equipo local.
+
+    	    - Pide confirmación antes de ejecutar los scripts de 
+    	      editores que no se han clasificado para indicar si son de 
+    	      confianza o no.
+
+            - Se corre el riesgo de ejecutar scripts sin firmar 
+              procedentes de orígenes distintos de Internet y 
+              malintencionados, aunque estén firmados.
+      
+        RemoteSigned
+            - Permite ejecutar scripts.
+
+            - Requiere una firma digital de un editor de confianza en 
+              scripts y archivos de configuración descargados de Internet 
+              (también desde programas de correo electrónico y de mensajería 
+              instantánea).
+
+    	    - No requiere firma digital en los scripts ejecutados y 
+    	      escritos en el equipo local (que no se hayan descargado desde 
+    	      Internet).
+
+            - Se corre el riesgo de ejecutar scripts malintencionados,
+               aunque estén firmados.
+
+        Unrestricted
+            - Permite ejecutar scripts sin firma. (Se corre el riesgo de 
+              ejecutar scripts malintencionados.)
+
+            - Advierte al usuario antes de ejecutar scripts y archivos de 
+              configuración que se descargan de Internet. 
+
+        Bypass
+            - No se bloquea nada y no se muestran advertencias ni 
+              mensajes.
+
+            - Esta directiva de ejecución está diseñada para 
+              configuraciones en las que un script de Windows 
+              PowerShell está integrado en una aplicación mayor o para 
+              configuraciones en que Windows PowerShell constituye la base de un 
+              programa que tiene su propio modelo de seguridad.
+
+        Undefined
+            - No hay ninguna directiva de ejecución establecida en el 
+              ámbito actual.
+
+            - Si la directiva de ejecución es Undefined en todos los 
+              ámbitos, la directiva de ejecución efectiva es 
+              Restricted, que es la directiva de ejecución predeterminada.
+
+
+    Nota: en los sistemas que no distinguen las rutas de la Convención de 
+          nomenclatura universal (UNC) de las rutas de Internet, puede ser que la 
+          directiva RemoteSigned no permita la ejecución de scripts 
+          identificados por una ruta UNC. 
+
+ 
+
+ ÁMBITO DE EJECUCIÓN DE LAS DIRECTIVAS
+ ----------------------
+    Se puede establecer una directiva de ejecución que sea efectiva 
+    solamente en un ámbito determinado. 
+
+    Los valores válidos de Scope son Process, CurrentUser y LocalMachine. 
+    LocalMachine es el valor predeterminado cuando se establece una 
+    directiva de ejecución. 
+
+    Los valores de Scope se muestran por orden de precedencia.
+
+        - Process 
+             La directiva de ejecución afecta solamente a la sesión 
+             actual (el proceso actual de Windows PowerShell). La 
+             directiva de ejecución se almacena en la variable de 
+             entorno de $PSExecutionPolicyPreference. Este valor se 
+             elimina cuando se cierra la sesión en la que se establece la 
+             directiva.
+
+        - CurrentUser 
+             La directiva de ejecución afecta solamente al usuario actual. 
+             Se almacena en la subclave HKEY_CURRENT_USER del Registro. 
+
+        - LocalMachine
+             La directiva de ejecución afecta a todos los usuarios 
+             del equipo actual. Se almacena en la subclave 
+             HKEY_LOCAL_MACHINE del Registro.
+
+    La directiva que tiene precedencia surte efecto en la sesión 
+    actual aunque se haya establecido una directiva más restrictiva 
+    en un nivel de precedencia inferior.
+
+    Para obtener más información, vea Set-ExecutionPolicy.
+
+
+
+ OBTENER LA DIRECTIVA DE EJECUCIÓN
+ ------------------------------
+    Para obtener la directiva de ejecución de Windows PowerShell que 
+    está en vigor en la sesión actual, se utiliza el cmdlet 
+    Get-ExecutionPolicy. 
+
+    El comando siguiente obtiene la directiva de ejecución actual:
+
+	get-executionpolicy  
+
+
+    Para obtener todas las directivas de ejecución que afectan a la sesión 
+    actual y mostrarlas por orden de precedencia, escriba:
+
+        get-executionpolicy -list
+
+    El resultado se parecerá a la salida del ejemplo siguiente:
+
+                  Scope    ExecutionPolicy
+                  -----    ---------------
+          MachinePolicy          Undefined
+             UserPolicy          Undefined
+                Process          Undefined
+            CurrentUser       RemoteSigned
+           LocalMachine          AllSigned
+     
+    En este caso, la directiva de ejecución efectiva es RemoteSigned 
+    porque la directiva de ejecución correspondiente al usuario 
+    actual tiene precedencia sobre la directiva de ejecución 
+    establecida para el equipo local.   
+
+    Para obtener la directiva de ejecución establecida para un ámbito 
+    determinado, se utiliza el parámetro Scope de Get-ExecutionPolicy. 
+
+    Por ejemplo, el comando siguiente obtiene la directiva de 
+    ejecución para el ámbito del usuario actual.
+
+        get-executionpolicy -scope CurrentUser	 
+
+
+
+
+
+ CAMBIAR LA DIRECTIVA DE EJECUCIÓN
+ ------------------------------
+    Para cambiar la directiva de ejecución de Windows PowerShell en 
+    el equipo, se utiliza el cmdlet Set-ExecutionPolicy. 
+
+    El cambio surte efecto de inmediato; no es necesario reiniciar Windows 
+    PowerShell. 
+
+    Si la directiva de ejecución se establece para el equipo local (valor 
+    predeterminado) o para el usuario actual, el cambio se guarda en el 
+    Registro y permanece efectivo hasta que se vuelva a cambiar.
+
+    Si la directiva de ejecución se establece para el proceso actual, 
+    no se guarda en el Registro. Se conserva hasta que se cierran el 
+    proceso actual y sus procesos secundarios. 
+
+    
+    Nota: en Windows Vista y en las versiones posteriores de Windows, para 
+          ejecutar comandos que modifican la directiva de ejecución del equipo local 
+          (valor predeterminado), es preciso iniciar Windows PowerShell con la 
+          opción "Ejecutar como administrador".
+    
+
+    Para cambiar la directiva de ejecución, escriba:
+ 
+        Set-ExecutionPolicy <nombre-de-la-directiva>
+
+    Por ejemplo: 
+
+        Set-ExecutionPolicy RemoteSigned
+
+
+
+    Para establecer la directiva de ejecución en un ámbito 
+    determinado, escriba:
+
+        Set-ExecutionPolicy <nombre-de-la-directiva> -scope <ámbito>
+
+    Por ejemplo: 
+
+        Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+
+
+    Aunque se ejecute correctamente, puede suceder que un comando 
+    para cambiar una directiva no cambie la directiva de ejecución 
+    efectiva.
+
+    Por ejemplo, un comando que establece la directiva de ejecución 
+    del equipo local puede ejecutarse correctamente pero ser 
+    invalidado por la directiva de ejecución correspondiente al 
+    usuario actual.
+    
+
+
+ QUITAR LA DIRECTIVA DE EJECUCIÓN
+ ----------------------------
+    Para quitar la directiva de ejecución de un ámbito determinado, 
+    se establece el valor de la directiva de ejecución en Undefined.
+
+    Por ejemplo, para quitar la directiva de ejecución para todos los 
+    usuarios del equipo local, escriba:
+
+        set-executionpolicy Undefined
+
+    O bien:
+
+        set-executionpolicy Undefined -scope LocalMachine
+
+    Si no hay ninguna directiva de ejecución establecida en ningún 
+    ámbito, la directiva de ejecución efectiva es Restricted, que es 
+    el valor predeterminado.  
+
+
+
+ ESTABLECER UNA DIRECTIVA DE EJECUCIÓN EN POWERSHELL.EXE
+ -----------------------------------------
+    El parámetro ExecutionPolicy de PowerShell.exe se puede utilizar 
+    a fin de establecer una directiva de ejecución para una nueva 
+    sesión de Windows PowerShell.
+    La directiva afecta solamente a la sesión actual y sus sesiones 
+    secundarias.
+
+    Para establecer la directiva de ejecución de una nueva sesión, debe 
+    iniciarse Windows PowerShell en la línea de comandos (como Cmd.exe o 
+    Windows PowerShell) y, a continuación, se utiliza el parámetro 
+    ExecutionPolicy de PowerShell.exe para establecer la directiva de 
+    ejecución.
+
+    Por ejemplo:
+
+	powershell.exe -executionpolicy -allsigned
+    
+    
+    La directiva de ejecución que se establece no se almacena en el Registro.
+    En lugar de ello, se almacena en la variable de entorno de 
+    $PSExecutionPolicyPreference. La variable se elimina al cerrar la 
+    sesión en la que se ha establecido la directiva.
+     
+    Durante la sesión, la directiva de ejecución que se ha 
+    establecido para la sesión tiene precedencia sobre una directiva de 
+    ejecución que esté establecida en el Registro para el equipo local o 
+    el usuario actual. Sin embargo, no tiene precedencia sobre la directiva 
+    de ejecución establecida mediante una configuración de Directiva de grupo 
+    (explicada más adelante).
+    
+           
+
+ UTILIZAR LA DIRECTIVA DE GRUPO PARA ADMINISTRAR LAS DIRECTIVAS DE EJECUCIÓN
+ -------------------------------------------
+    La opción de activación de la ejecución de scripts de la 
+    Directiva de grupo se puede utilizar para administrar la directiva de 
+    ejecución de los equipos de la empresa. La configuración de la 
+    Directiva de grupo invalida las directivas de ejecución establecidas 
+    en todos los ámbitos de Windows PowerShell. 
+
+    La opción de activación de la ejecución de scripts de la 
+    directiva funciona como sigue:
+    
+    -- Si se deshabilita la activación de la ejecución de scripts, 
+       los scripts no se ejecutan. Equivale a la directiva de ejecución 
+       "Restricted".
+
+    -- Si se habilita la activación de la ejecución de script, se puede 
+       seleccionar una directiva de ejecución. La configuración de la 
+       Directiva de grupo es equivalente a la configuración de directiva de 
+       ejecución siguiente.
+
+        Directiva de grupo                Directiva de ejecución  
+        ------------                      ----------------
+        Permitir todos los scripts.       Unrestricted
+
+        Permitir los scripts locales      RemoteSigned
+        y los remotos firmados.        
+        
+        Permitir solo scripts firmados.          AllSigned
+
+           -- Si la activación de la ejecución de scripts no se 
+              configura, no surte efecto. La directiva de ejecución 
+              establecida en Windows PowerShell es la efectiva.
+
+
+    El archivo PowerShellExecutionPolicy.adm agrega la directiva de 
+    activación de la ejecución de script a los nodos Configuración 
+    del equipo y Configuración de usuario del Editor de directivas de 
+    grupo en las rutas de acceso siguientes.
+
+        Para Windows XP y Windows Server 2003:
+        Plantillas administrativas\Componentes de Windows\Windows 
+        PowerShell
+
+        Para Windows Vista y versiones posteriores de Windows:
+        Plantillas administrativas\Plantillas administrativas 
+        clásicas\Componentes de Windows\Windows PowerShell
+
+    Las directivas establecidas en el nodo Configuración del equipo tienen 
+    precedencia sobre las establecidas en el nodo Configuración de usuario.
+
+    El archivo PowerShellExecutionPolicy.adm está disponible en el 
+    Centro de descarga de Microsoft. Para obtener más información, vea 
+    "Administrative Templates for Windows PowerShell" en 
+    http://go.microsoft.com/fwlink/?LinkId=131786.
+    
+
+ PRECEDENCIA DE LAS DIRECTIVAS DE EJECUCIÓN
+ ---------------------------
+    Al determinar la directiva de ejecución efectiva para una sesión, 
+    Windows PowerShell evalúa las directivas de ejecución en el orden de 
+    precedencia siguiente:
+
+        - Directiva de grupo: Configuración del equipo
+        - Directiva de grupo: Configuración de usuario
+        - Directiva de ejecución: Process (o PowerShell.exe 
+        - ExecutionPolicy) Directiva de ejecución: CurrentUser
+        - Directiva de ejecución: LocalMachine  
+
+
+ ADMINISTRAR SCRIPTS FIRMADOS Y SIN FIRMAR
+ ----------------------------------
+    Si la directiva de ejecución de Windows PowerShell es 
+    RemoteSigned, Windows PowerShell no ejecutará scripts sin firma 
+    descargados desde Internet (ni desde programas de correo electrónico y 
+    mensajería instantánea).
+ 
+    Se puede firmar el script o bien optar por ejecutar un script sin 
+    firmar sin cambiar la directiva de ejecución.
+
+    Para obtener más información, vea about_Signing.
+
+
+VEA TAMBIÉN
+    Get-ExecutionPolicy
+    Set-ExecutionPolicy
+    about_Signing
+    "Administrative Templates for Windows PowerShell" 
+    (http://go.microsoft.com/fwlink/?LinkId=131786) 
+

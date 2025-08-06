@@ -1,0 +1,207 @@
+﻿TEMA
+    about_WS-Management_Cmdlets
+
+DESCRIPCIÓN BREVE
+    Proporciona información general de Web Services for
+    Management (WS-Management) como base para utilizar los cmdlets
+    de WS-Management en Windows PowerShell.
+
+DESCRIPCIÓN DETALLADA
+    En este tema se proporciona información general de Web Services
+    for Management (WS-Management) como base para utilizar los
+    cmdlets de WS-Management en Windows PowerShell. También se
+    proporcionan vínculos a información adicional sobre WS-Management. 
+    La implementación de Microsoft de WS-Management también se conoce
+    como Administración remota de Windows (WinRM).
+    
+
+  Acerca de WS-Management 
+
+      Administración remota de Windows es la implementación de
+      Microsoft del protocolo WS-Management, un protocolo estándar
+      basado en SOAP con un firewall simple que permite que el
+      hardware y los sistemas operativos de proveedores diferentes
+      puedan interoperar. La especificación del protocolo 
+      WS-Management proporciona un método común para que los sistemas
+      puedan obtener acceso e intercambiar información de
+      administración en una infraestructura de tecnologías de la
+      información (TI). WS-Management y la Interfaz de
+      administración inteligente de plataformas (IPMI), junto con
+      el Recopilador de eventos, son componentes de las
+      características de Administración de hardware de Windows. 
+
+      El protocolo WS-Management se basa en las especificaciones de
+      servicio Web estándar siguientes: HTTPS, SOAP sobre HTTP
+      (perfil WS-I), SOAP 1.2, WS-Addressing, WS-Transfer,
+      WS-Enumeration y WS-Eventing. 
+
+  WS-Management y WMI
+
+      WS-Management se puede utilizar para recuperar datos expuestos
+      por Instrumental de administración de Windows (WMI). Puede
+      obtener datos de WMI con scripts o aplicaciones que utilizan
+      la API Scripting de WS-Management o a través de la herramienta
+      de línea de comandos de WinRM. WS-Management admite la mayoría
+      de las operaciones y clases de WMI familiares, incluidos los
+      objetos incrustados. WS-Management puede beneficiarse de WMI
+      para recopilar datos sobre recursos o administrar recursos
+      en equipos basados en Windows. Eso significa que puede obtener
+      datos sobre objetos como discos, adaptadores de red, servicios
+      o procesos en su empresa a través del conjunto existente de
+      clases de WMI. También puede tener acceso a los datos de
+      hardware disponibles del proveedor IPMI de WMI estándar.
+
+  Proveedor de WS-Management de Windows PowerShell
+
+      El proveedor de WS-Management proporciona una vista jerárquica
+      en la configuración de WS-Management disponible. El proveedor
+      permite explorar y establecer las diversas opciones de
+      configuración de WS-Management. 
+
+                 
+  Configuración de WS-Management
+
+      Si WS-Management no está instalado y configurado, la
+      comunicación remota de Windows PowerShell no estará
+      disponible, los cmdlets de WS-Management no se ejecutarán,
+      los scripts de WS-Management no se ejecutarán y el proveedor
+      de WS-Management no podrá realizar operaciones de datos. La
+      herramienta de línea de comandos de WS-Management, WinRM,
+      y el reenvío de eventos también dependen de la configuración
+      de WS-Management.
+
+  Cmdlets de WS-Management
+
+      La funcionalidad de WS-Management se implementa en Windows
+      PowerShell a través de un módulo que contiene un conjunto
+      de cmdlets y el proveedor de WS-Management. 
+      Puede utilizar estos cmdlets para completar las tareas de
+      extremo a extremo necesarias para administrar la configuración
+      de WS-Management en equipos locales y remotos.
+ 
+      Los siguientes cmdlets de WS-Management están disponibles.
+
+     Cmdlets de conexión
+
+     -- Connect-WSMan: conecta el equipo local con el servicio 
+        WS-Management (WinRM) en un equipo remoto.
+
+     --Disconnect-WSMan: desconecta el equipo local del servicio 
+       WS-Management (WinRM) en un equipo remoto.
+
+     Cmdlets de datos de administración
+
+     -- Get-WSManInstance: muestra información de administración para
+        una instancia de recurso especificada por un URI de recurso.
+
+     -- Invoke-WSManAction: invoca una acción en el objeto de destino
+        especificado por el URI de recurso y por los selectores.
+
+     -- New-WSManInstance: crea una nueva instancia de un recurso
+     de administración.
+
+     -- Remove-WSManInstance: elimina una instancia de un recurso
+        de administración.
+
+     -- Set-WSManInstance: modifica la información de administración
+        relacionada con un recurso.
+ 
+     Cmdlets de instalación y configuración
+
+     -- Set-WSManQuickConfig: configura el equipo local para la
+        administración remota. Puede utilizar el cmdlet Set-WSManQuickConfig
+        para configurar WS-Management de modo que se permitan las conexiones
+        remotas al servicio WS-Management (WinRM). El cmdlet 
+        Set-WSManQuickConfig realiza las operaciones siguientes:
+	
+	- Determina si el servicio WS-Management (WinRM) se está ejecutando.
+          Si el servicio WinRM no se está ejecutando, el cmdlet 
+          Set-WSManQuickConfig inicia el servicio.
+
+	- Establece en Automático el tipo de inicio del servicio 
+          WS-Management (WinRM).
+
+	- Crea un agente de escucha que acepta solicitudes de cualquier
+          dirección IP. El protocolo de transporte predeterminado es HTTP.
+
+	- Habilita la excepción de firewall para el tráfico de WS-Management.
+	
+	Nota: para ejecutar este cmdlet en Windows Vista, Windows Server 2008
+              y versiones posteriores de Windows, se debe iniciar Windows PowerShell
+              con la opción "Ejecutar como administrador".
+
+     -- Test-WSMan: comprueba que WS-Management está instalado y
+        configurado. El cmdlet Test-WSMan prueba si el servicio 
+        WS-Management (WinRM) se está ejecutando y está configurado en
+        un equipo local o remoto.
+
+     -- Disable-WSManCredSSP: deshabilita la autenticación CredSSP en
+        un equipo cliente.
+
+     -- Enable-WSManCredSSP: habilita la autenticación CredSSP en un
+        equipo cliente.
+ 
+     -- Get-WSManCredSSP: obtiene la configuración relacionada con
+        CredSSP para un equipo cliente.
+
+     Cmdlets específicos de WS-Management
+
+     -- New-WSManSessionOption: crea un objeto WSManSessionOption para
+        utilizarlo como entrada a uno o más parámetros de un cmdlet
+        de WS-Management.
+
+    
+  Información adicional de WS-Management
+   
+    Para obtener más información acerca de WS-Management, vea los
+    temas siguientes en MSDN Library (Microsoft Developer Network).
+    
+ 
+      "Windows Remote Management" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142321
+    
+      "About Windows Remote Management" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142322
+
+      "Installation and Configuration for Windows Remote
+      Management" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142323
+
+      "Windows Remote Management Architecture" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142324
+
+      "WS-Management Protocol" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142325
+
+      "Windows Remote Management and WMI" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142326
+
+      "Resource URIs" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142327
+
+      "Remote Hardware Management" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142328
+
+      "Events" (puede estar en inglés)
+      http://go.microsoft.com/fwlink/?LinkId=142329
+
+VEA TAMBIÉN
+    Versión en pantalla: http://go.microsoft.com/fwlink/?LinkId=142331
+    
+    Connect-WSMan
+    Disable-WSManCredSSP
+    Disconnect-WSMan
+    Enable-WSManCredSSP
+    Get-WSManCredSSP
+    Get-WSManInstance
+    Invoke-WSManAction
+    New-WSManInstance
+    Remove-WSManInstance
+    Set-WSManInstance
+    Set-WSManQuickConfig
+    Set-WSManSessionOption 
+    Test-WSMan
+ 
+PALABRAS CLAVE
+    about_WSMAN about_WinRM
+

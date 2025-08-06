@@ -1,0 +1,86 @@
+﻿TEMA
+    about_Wildcards
+
+DESCRIPCIÓN BREVE
+    Describe cómo se utilizan los caracteres comodín en Windows 
+    PowerShell.
+ 
+
+DESCRIPCIÓN DETALLADA
+    En muchos casos, es posible que desee ejecutar un cmdlet respecto 
+    a un grupo de elementos, en lugar de un elemento individual. Por 
+    ejemplo, quizá desee buscar todos los archivos del directorio 
+    C:\Techdocs que tengan la extensión .ppt. Si ejecutara el comando 
+    siguiente, se devolverían todos los elementos del directorio:
+
+        Get-ChildItem c:\techdocs
+
+
+    El problema con este comando es que tendría que inspeccionar 
+    visualmente todos los documentos enumerados en el directorio para 
+    determinar los archivos que tienen la extensión .ppt. Sin 
+    embargo, puede limitar los elementos que desea que se devuelvan usando 
+    caracteres comodín en los parámetros de un cmdlet. Un carácter 
+    comodín es un tipo de marcador de posición que permite buscar valores 
+    desconocidos con el fin de que se devuelvan resultados concretos. 
+    El proceso de utilizar caracteres comodín recibe a veces el nombre de 
+    "globbing" en inglés. Por ejemplo, puede reconvertir el ejemplo 
+    anterior de modo que sólo se devuelvan archivos .ppt:
+
+        Get-ChildItem c:\techdocs\*.ppt
+
+
+    En este caso, el asterisco (*)se usa como carácter comodín para 
+    especificar que puede haber cualquier carácter delante de la 
+    extensión de nombre de archivo.ppt. Dado que se incluye la 
+    extensión de nombre de archivo, todos los archivos devueltos por 
+    el comando deberán tener esa extensión, pero podrán tener 
+    cualquier nombre. Como consecuencia, únicamente se devuelven los 
+    archivos que se desea.
+
+
+    Windows PowerShell admite varios caracteres comodín además del 
+    asterisco.
+
+
+        Carácter comodín Descripción        Ejemplo  Coincidencia     
+                Sin coincidencia
+        -------- ------------------ -------- ----------------- --------
+        *        Coincidencia de cero o más caracteres    a*       A, 
+                 agencia, Ana      patata
+
+        ?        Coincidencia exacta de un carácter en la posición 
+        especificada    per?       pera, pero        peral
+
+        []      Coincidencia de un intervalo de caracteres    
+        [a-l]ema lema, gema  tema
+ 
+        [ ]      Coincidencia de los caracteres especificados  
+        [bc]ota  bota, cota        mota
+
+
+    La mayoría de los cmdlets aceptan caracteres comodín en algunos de sus 
+    parámetros. En el tema de Ayuda de cada cmdlet se describen los 
+    parámetros, si los hubiera, que permiten caracteres comodín. En los 
+    parámetros que aceptan caracteres comodín, no se distinguen mayúsculas 
+    de minúsculas. Por ejemplo, per? devolverá Pera, pera, Pero y pero.
+
+
+    También puede combinar varios caracteres comodín en un mismo 
+    parámetro. Por ejemplo, supongamos que desea que se muestren todos los 
+    archivos con extensión .txt del directorio C:\Techdocs que comiencen 
+    por las letras de la a a la l. Puede usar el comando siguiente:
+
+        Get-ChildItem c:\techdocs\[a-l]*.txt
+
+
+    El comando usa un carácter comodín de intervalo ([a-l]) para 
+    especificar que el nombre del archivo debe comenzar por una letra 
+    de la a a la l. Posteriormente, el comando usa el carácter 
+    comodín * para proporcionar un marcador de posición de los 
+    caracteres que se encuentren entre la primera letra y la 
+    extensión de nombre de archivo.
+
+
+VEA TAMBIÉN
+    about_Language_Keywords
